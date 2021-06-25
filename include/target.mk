@@ -12,18 +12,20 @@ DEVICE_TYPE?=router
 # Default packages - the really basic set
 DEFAULT_PACKAGES:=\
 	base-files \
+	ca-bundle \
 	dropbear \
 	fstools \
 	libc \
 	libgcc \
-	libustream-openssl \
+	libustream-wolfssl \
 	logd \
 	mtd \
 	netifd \
 	opkg \
 	uci \
 	uclient-fetch \
-	urandom-seed
+	urandom-seed \
+	urngd
 
 ifneq ($(CONFIG_SELINUX),)
 DEFAULT_PACKAGES+=busybox-selinux procd-selinux
@@ -41,17 +43,15 @@ DEFAULT_PACKAGES.nas:=\
 	mdadm
 # For router targets
 DEFAULT_PACKAGES.router:=\
-	dnsmasq-full \
+	dnsmasq \
 	firewall \
+	ip6tables \
 	iptables \
+	kmod-ipt-offload \
+	odhcp6c \
+	odhcpd-ipv6only \
 	ppp \
-	ppp-mod-pppoe \
-	luci-newapi block-mount coremark kmod-nf-nathelper kmod-nf-nathelper-extra kmod-ipt-raw \
-	default-settings luci luci-app-ddns luci-app-upnp luci-app-autoreboot \
-	luci-app-filetransfer luci-app-vsftpd luci-app-ssr-plus luci-app-unblockmusic luci-app-arpbind \
-	luci-app-vlmcsd luci-app-wol luci-app-ramfree \
-	luci-app-flowoffload luci-app-nlbwmon luci-app-accesscontrol \
-	ddns-scripts_aliyun ddns-scripts_dnspod
+	ppp-mod-pppoe
 
 ifneq ($(DUMP),)
   all: dumpinfo
