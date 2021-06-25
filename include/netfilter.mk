@@ -1,47 +1,47 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
-# Copyright (C) 2006-2020 OpenWrt.org
+#版权所有 (C) 2006-2020 OpenWrt.org
 
-ifneq ($(__inc_netfilter),1)
-__inc_netfilter:=1
+ifneq ( $( __inc_netfilter ) ,1)
+__inc_netfilter: =1
 
-ifeq ($(NF_KMOD),1)
-P_V4:=ipv4/netfilter/
-P_V6:=ipv6/netfilter/
-P_XT:=netfilter/
-P_EBT:=bridge/netfilter/
-endif
+ifeq ( $( NF_KMOD ) ,1)
+P_V4： =ipv4/netfilter/
+P_V6： =ipv6/netfilter/
+P_XT： =网络过滤器/
+P_EBT： =网桥/网络过滤器/
+万一
 
-# 1: variable
-# 2: kconfig symbols
-# 3: file list
-# 4: version dependency
-define nf_add
- $(if $(4),ifeq ($$(strip $$(call CompareKernelPatchVer,$$(KERNEL_PATCHVER),$(firstword $(4)),$(lastword $(4)))),1))
-  $(1)-$$($(2)) += $(3)
- $(if $(4),endif)
- KCONFIG_$(1) = $(filter-out $(2),$(KCONFIG_$(1))) $(2)
-endef
+# 1：变量
+# 2: kconfig 符号
+# 3: 文件列表
+# 4：版本依赖
+定义 nf_add
+ $（如果 $（4），IFEQ（$$（条 $$（呼叫CompareKernelPatchVer，$$（KERNEL_PATCHVER），$（firstword  $（4）），$（最后字 $（4）））），1） ）
+  $( 1 ) - $$( $( 2 ) ) += $( 3 )
+ $(如果 $( 4 ) ,endif)
+KCONFIG_ $( 1 ) = $(过滤掉 $( 2 ) , $( KCONFIG_ $( 1 ) ) )  $( 2 )
+恩德夫
 
 
-# core
+#核心
 
-# kernel only
+#仅内核
 $(eval $(if $(NF_KMOD),$(call nf_add,NF_REJECT,CONFIG_NF_REJECT_IPV4, $(P_V4)nf_reject_ipv4),))
 
 $(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_IP_NF_IPTABLES, $(P_V4)ip_tables),))
 $(eval $(if $(NF_KMOD),$(call nf_add,NF_IPT,CONFIG_NETFILTER_XTABLES, $(P_XT)x_tables),))
 
 $(eval $(if $(NF_KMOD),$(call nf_add,IPT_CORE,CONFIG_NETFILTER_XTABLES, $(P_XT)xt_tcpudp),))
-$(eval $(if $(NF_KMOD),$(call nf_add,IPT_CORE,CONFIG_IP_NF_FILTER, $(P_V4)iptable_filter),))
+$(eval $(if $(NF_KMOD),$(调用 nf_add,IPT_CORE,CONFIG_IP_NF_FILTER, $(P_V4)iptable_filter),))
 $(eval $(if $(NF_KMOD),$(call nf_add,IPT_CORE,CONFIG_IP_NF_MANGLE, $(P_V4)iptable_mangle),))
 
-# userland only
-$(eval $(if $(NF_KMOD),,$(call nf_add,IPT_CORE,CONFIG_IP_NF_IPTABLES, xt_standard ipt_icmp xt_tcp xt_udp xt_comment xt_set xt_SET)))
+#仅限用户空间
+$(eval $(if $(NF_KMOD),,$(调用 nf_add,IPT_CORE,CONFIG_IP_NF_IPTABLES, xt_standard ipt_icmp xt_tcp xt_udp xt_comment xt_set xt_SET)))
 
-$(eval $(call nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_LIMIT, $(P_XT)xt_limit))
-$(eval $(call nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_MAC, $(P_XT)xt_mac))
-$(eval $(call nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_MULTIPORT, $(P_XT)xt_multiport))
+$(eval $(调用 nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_LIMIT, $(P_XT)xt_limit))
+$(eval $(调用 nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_MAC, $(P_XT)xt_mac))
+$(eval $(调用 nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_MULTIPORT, $(P_XT)xt_multiport))
 $(eval $(call nf_add,IPT_CORE,CONFIG_NETFILTER_XT_MATCH_COMMENT, $(P_XT)xt_comment))
 
 #cluster
@@ -381,6 +381,6 @@ IPT_BUILTIN += $(NFNETLINK_QUEUE-y)
 IPT_BUILTIN += $(EBTABLES-y)
 IPT_BUILTIN += $(EBTABLES_IP4-y)
 IPT_BUILTIN += $(EBTABLES_IP6-y)
-IPT_BUILTIN += $(EBTABLES_WATCHERS-y)
+IPT_BUILTIN += $( EBTABLES_WATCHERS-y )
 
-endif # __inc_netfilter
+endif  # __inc_netfilter
