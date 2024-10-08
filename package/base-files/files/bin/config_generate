@@ -317,6 +317,7 @@ generate_static_system() {
 		set system.@system[-1].log_size='64'
 		set system.@system[-1].urandom_seed='0'
 		set system.@system[-1].zonename='Asia/Shanghai'
+		set luci.main.lang='zh_Hans'
 	EOF
 		uci set luci.main.lang='zh_Hans'
 		uci commit luci
