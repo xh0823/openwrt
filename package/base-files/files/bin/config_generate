@@ -319,7 +319,6 @@ generate_static_system() {
 		set system.@system[-1].zonename='Asia/Shanghai'
 		set luci.main.lang='zh_Hans'
 	EOF
-		uci set luci.main.lang='zh_Hans'
 		uci commit luci
 		uci commit system
 
