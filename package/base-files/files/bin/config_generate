@@ -312,10 +312,12 @@ generate_static_system() {
 		delete system.@system[0]
 		add system system
 		set system.@system[-1].hostname='DESKTOP-6J0M9NF'
-		set system.@system[-1].timezone='UTC'
+		set system.@system[-1].timezone='CST-8'
 		set system.@system[-1].ttylogin='0'
 		set system.@system[-1].log_size='64'
 		set system.@system[-1].urandom_seed='0'
+		uci set system.@system[0].zonename=Asia/Shanghai'
+		uci set luci.main.lang=zh_Hans'
 
 		delete system.ntp
 		set system.ntp='timeserver'
