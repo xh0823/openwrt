@@ -318,6 +318,8 @@ generate_static_system() {
 		set system.@system[-1].urandom_seed='0'
 		uci set system.@system[0].zonename=Asia/Shanghai'
 		uci set luci.main.lang=zh_Hans'
+		uci commit luci'
+		uci commit system'
 
 		delete system.ntp
 		set system.ntp='timeserver'
