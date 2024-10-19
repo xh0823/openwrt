@@ -314,7 +314,7 @@ generate_static_system() {
 		set system.@system[-1].hostname='DESKTOP-6J0M9NF'
 		set system.@system[-1].timezone='CST-8'
 		set system.@system[-1].ttylogin='0'
-		set system.@system[-1].log_size='64'
+		set system.@system[-1].log_size='128'
 		set system.@system[-1].urandom_seed='0'
 		set system.@system[-1].zonename='Asia/Shanghai'
 		set luci.main.lang='zh_Hans'
