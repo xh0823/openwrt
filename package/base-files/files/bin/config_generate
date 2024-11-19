@@ -317,7 +317,9 @@ generate_static_system() {
 		set system.@system[-1].log_size='128'
 		set system.@system[-1].urandom_seed='0'
 		set system.@system[-1].zonename='Asia/Shanghai'
-		set luci.main.lang='Chinese Simplified'
+		set luci.main.lang='zh_CN'
+		uci commit luci
+		/etc/init.d/uhttpd restart
 
 		delete system.ntp
 		set system.ntp='timeserver'
