@@ -788,7 +788,8 @@ TFA_TARGETS:= \
 	mt7988-spim-nand-ubi-ddr4 \
 	mt7988-emmc-comb-4bg \
 	mt7988-sdmmc-comb-4bg \
-	mt7988-spim-nand-ubi-comb-4bg
+	mt7988-spim-nand-ubi-comb-4bg \
+	mt7988-tplink-tl-7dr7299-comb
 
 TFA_MAKE_FLAGS += \
 	BOOT_DEVICE=$(BOOT_DEVICE) \
