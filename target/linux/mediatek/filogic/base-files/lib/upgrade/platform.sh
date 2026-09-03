@@ -159,8 +159,10 @@ platform_do_upgrade() {
 	bananapi,bpi-r4-lite|\
 	bananapi,bpi-r4-pro-8x|\
 	bazis,ax3000wm|\
+	cetron,ct3003-ubootmod|\
 	cmcc,a10-ubootmod|\
 	cmcc,rax3000m|\
+	cmcc,rax3000me|\
 	comfast,cf-wr632ax-ubi|\
 	comfast,cf-wr632ax-ubootmod|\
 	creatlentem,clt-r30b1-ubi|\
@@ -179,6 +181,7 @@ platform_do_upgrade() {
 	jcg,q30-pro|\
 	jdcloud,re-cp-03|\
 	konka,komi-a31|\
+	livinet,zr-3020-ubootmod|\
 	mediatek,mt7981-rfb|\
 	mediatek,mt7988a-rfb|\
 	mercusys,mr85x-ubi|\
@@ -199,6 +202,10 @@ platform_do_upgrade() {
 	snr,snr-cpe-ax2|\
 	teralink,tl3020-256mb|\
 	tplink,be450-ubi|\
+	tplink,tl-7dr7230-v1|\
+	tplink,tl-7dr7230-v2|\
+	tplink,tl-7dr7250-v1|\
+	tplink,tl-7dr7299-v1|\
 	tplink,tl-xdr4288|\
 	tplink,tl-xdr6086|\
 	tplink,tl-xdr6088|\
@@ -222,14 +229,12 @@ platform_do_upgrade() {
 	glinet,gl-x3000|\
 	glinet,gl-xe3000|\
 	hiveton,h5000m|\
-	huasifei,wh3000|\
+	huasifei,wh3000-emmc|\
 	huasifei,wh3000-pro-emmc|\
 	smartrg,sdg-8612|\
 	smartrg,sdg-8614|\
 	smartrg,sdg-8622|\
 	smartrg,sdg-8632|\
-	smartrg,sdg-8712|\
-	smartrg,sdg-8732|\
 	smartrg,sdg-8733|\
 	smartrg,sdg-8733a|\
 	smartrg,sdg-8734)
@@ -410,8 +415,10 @@ platform_check_image() {
 	bananapi,bpi-r4-lite|\
 	bananapi,bpi-r4-pro-8x|\
 	bazis,ax3000wm|\
+	cetron,ct3003-ubootmod|\
 	cmcc,a10-ubootmod|\
 	cmcc,rax3000m|\
+	cmcc,rax3000me|\
 	comfast,cf-wr632ax-ubi|\
 	comfast,cf-wr632ax-ubootmod|\
 	creatlentem,clt-r30b1-ubi|\
@@ -426,9 +433,11 @@ platform_check_image() {
 	gatonetworks,gdsp|\
 	globitel,bt-r320|\
 	h3c,magic-nx30-pro|\
+	imou,lc-hx3001|\
 	jcg,q30-pro|\
 	jdcloud,re-cp-03|\
 	konka,komi-a31|\
+	livinet,zr-3020-ubootmod|\
 	mediatek,mt7981-rfb|\
 	mediatek,mt7988a-rfb|\
 	mercusys,mr85x-ubi|\
@@ -439,11 +448,15 @@ platform_check_image() {
 	netis,nx32u|\
 	openwrt,one|\
 	netcore,n60|\
+	netcore,n60-pro|\
 	qihoo,360t7|\
 	qihoo,360t7-ubi|\
 	routerich,ax3000-ubootmod|\
 	teralink,tl3020-256mb|\
 	tplink,be450-ubi|\
+	tplink,tl-7dr7230-v1|\
+	tplink,tl-7dr7230-v2|\
+	tplink,tl-7dr7250-v1|\
 	tplink,tl-xdr4288|\
 	tplink,tl-xdr6086|\
 	tplink,tl-xdr6088|\
@@ -481,20 +494,6 @@ platform_check_image() {
 
 platform_copy_config() {
 	case "$(board_name)" in
-	bananapi,bpi-r3|\
-	bananapi,bpi-r3-mini|\
-	bananapi,bpi-r4|\
-	bananapi,bpi-r4-2g5|\
-	bananapi,bpi-r4-poe|\
-	bananapi,bpi-r4-lite|\
-	bananapi,bpi-r4-pro-8x|\
-	cmcc,rax3000m|\
-	gatonetworks,gdsp|\
-	mediatek,mt7988a-rfb)
-		if [ "$CI_METHOD" = "emmc" ]; then
-			emmc_copy_config
-		fi
-		;;
 	acer,predator-w6|\
 	acer,predator-w6d|\
 	acer,vero-w6m|\
@@ -507,7 +506,7 @@ platform_copy_config() {
 	glinet,gl-xe3000|\
 	globitel,bt-r320|\
 	hiveton,h5000m|\
-	huasifei,wh3000|\
+	huasifei,wh3000-emmc|\
 	huasifei,wh3000-pro-emmc|\
 	jdcloud,re-cp-03|\
 	nradio,c8-668gl|\
@@ -515,13 +514,26 @@ platform_copy_config() {
 	smartrg,sdg-8614|\
 	smartrg,sdg-8622|\
 	smartrg,sdg-8632|\
-	smartrg,sdg-8712|\
-	smartrg,sdg-8732|\
 	smartrg,sdg-8733|\
 	smartrg,sdg-8733a|\
 	smartrg,sdg-8734|\
 	ubnt,unifi-6-plus)
 		emmc_copy_config
+		;;
+	bananapi,bpi-r3|\
+	bananapi,bpi-r3-mini|\
+	bananapi,bpi-r4|\
+	bananapi,bpi-r4-2g5|\
+	bananapi,bpi-r4-poe|\
+	bananapi,bpi-r4-lite|\
+	bananapi,bpi-r4-pro-8x|\
+	cmcc,rax3000m|\
+	cmcc,rax3000me|\
+	gatonetworks,gdsp|\
+	mediatek,mt7988a-rfb)
+		if [ "$CI_METHOD" = "emmc" ]; then
+			emmc_copy_config
+		fi
 		;;
 	esac
 }
