@@ -701,6 +701,16 @@ define Trusted-Firmware-A/mt7988-spim-nand-ubi-comb-4bg
   USE_UBI:=1
 endef
 
+define Trusted-Firmware-A/mt7988-tplink-tl-7dr7299-comb
+  NAME:=MediaTek MT7988 (SPI-NAND via SPIM)
+  BOOT_DEVICE:=spim-nand
+  BUILD_SUBTARGET:=filogic
+  PLAT:=mt7988
+  DRAM_USE_COMB:=1
+  FIP_OFFSET:=0x580000
+  FIP_SIZE:=0x100000
+endef
+
 TFA_TARGETS:= \
 	mt7622-nor-1ddr \
 	mt7622-nor-2ddr \
