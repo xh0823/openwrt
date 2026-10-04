@@ -17,7 +17,41 @@
 #include <uapi/linux/rtnetlink.h>
 
 #include "l3.h"
+#include "pie.h"
 #include "rtl-otto.h"
+
+/* L3 actions */
+#define L3_FORWARD		0
+
+/* Route entry types */
+#define ROUTE_TYPE_IP4UC	0
+#define ROUTE_TYPE_IP4MC	1
+#define ROUTE_TYPE_IP6UC	2
+#define ROUTE_TYPE_IP6MC	3
+
+/* Route actions */
+#define ROUTE_ACT_FORWARD	0
+#define ROUTE_ACT_TRAP2CPU	1
+#define ROUTE_ACT_COPY2CPU	2
+#define ROUTE_ACT_DROP		3
+
+/* L3 Routing */
+#define RTL839X_ROUTING_SA_CTRL			0x6afc
+#define RTL930X_L3_HOST_TBL_CTRL		(0xAB48)
+#define RTL930X_L3_IPUC_ROUTE_CTRL		(0xAB4C)
+#define RTL930X_L3_IP6UC_ROUTE_CTRL		(0xAB50)
+#define RTL930X_L3_IPMC_ROUTE_CTRL		(0xAB54)
+#define RTL930X_L3_IP6MC_ROUTE_CTRL		(0xAB58)
+#define RTL930X_L3_IP_MTU_CTRL(i)		(0xAB5C + ((i >> 1) << 2))
+#define RTL930X_L3_IP6_MTU_CTRL(i)		(0xAB6C + ((i >> 1) << 2))
+#define RTL930X_L3_HW_LU_KEY_CTRL		(0xAC9C)
+#define RTL930X_L3_HW_LU_KEY_IP_CTRL		(0xACA0)
+#define RTL930X_L3_HW_LU_CTRL			(0xACC0)
+#define RTL930X_L3_IP_ROUTE_CTRL		0xab44
+
+#define DEFAULT_MTU 1536
+#define MAX_ROUTER_MACS 64
+#define L3_EGRESS_DMACS 2048
 
 static const struct rhashtable_params otto_l3_route_ht_params = {
 	.key_len     = sizeof(struct in6_addr),
@@ -421,7 +455,6 @@ static void otto_l3_930x_set_nexthop(struct otto_l3_ctrl *ctrl,
 	dev_dbg(ctrl->dev, "value at index 0: %08x\n", v);
 	otto_table_write(RTL9300_TBL_L3_NEXTHOP, idx, &v);
 }
-
 
 /* Prefix length of an IPv6 mask, i.e. how many leading bits are set */
 __maybe_unused
@@ -1756,14 +1789,10 @@ static int otto_l3_fib_add_v4(struct otto_l3_ctrl *ctrl, struct fib_entry_notifi
 	if (otto_l3_fib_check_v4(ctrl, info, FIB_EVENT_ENTRY_ADD))
 		return 0;
 
-	port = otto_l3_port_dev_lower_find(ndev, ctrl);
-	if (port < 0) {
-		dev_err(ctrl->dev, "lower interface %s not found\n", ndev->name);
-		return -ENODEV;
-	}
-
 	/* Every add that reaches the driver arrives as a replace, so a route
-	 * for this destination may already be programmed. Take it out first.
+	 * for this destination may already be programmed. Take it out first,
+	 * before anything can turn the new one down: deleting the programmed
+	 * route arrives as a replace too, carrying its successor.
 	 */
 	route = otto_l3_route_find(ctrl, info->tb_id, ROUTE_TYPE_IP4UC, info->dst, NULL,
 				   info->dst_len);
@@ -1771,6 +1800,12 @@ static int otto_l3_fib_add_v4(struct otto_l3_ctrl *ctrl, struct fib_entry_notifi
 		dev_dbg(ctrl->dev, "replacing route %pI4/%d, id %d\n",
 			&info->dst, info->dst_len, route->id);
 		otto_l3_route_teardown(ctrl, route);
+	}
+
+	port = otto_l3_port_dev_lower_find(ndev, ctrl);
+	if (port < 0) {
+		dev_err(ctrl->dev, "lower interface %s not found\n", ndev->name);
+		return -ENODEV;
 	}
 
 	/* Allocate route or host-route entry (if hardware supports this) */
